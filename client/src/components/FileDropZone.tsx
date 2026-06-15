@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Upload } from 'lucide-react';
+
 
 interface Props {
   onFileSelect: (file: File) => void;
