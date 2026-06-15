@@ -40,7 +40,7 @@ export const TransferProgressBar: React.FC<Props> = ({ percent, speedBps, etaSec
         <span className="font-h1 text-[14px] font-semibold text-on-surface">{formatSpeed(speedBps)}</span>
       </div>
       <span className="font-body text-[14px] text-on-surface-variant opacity-100 transition-opacity duration-200">
-        ~{formatEta(etaSeconds)} remaining
+        {formatEta(etaSeconds)} remaining
       </span>
     </div>
     

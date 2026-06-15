@@ -13,9 +13,9 @@ describe('hasher', () => {
     });
 
     it('should compute consistent hashes', async () => {
-      const buffer = new Uint8Array([1, 2, 3]).buffer;
-      const hash1 = await computeSha256(buffer);
-      const hash2 = await computeSha256(buffer);
+      const data = new Uint8Array([1, 2, 3]);
+      const hash1 = await computeSha256(data);
+      const hash2 = await computeSha256(data);
       expect(hash1).toBe(hash2);
     });
   });

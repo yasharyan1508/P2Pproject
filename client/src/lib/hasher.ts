@@ -1,11 +1,11 @@
 /**
  * Computes the SHA-256 hash of an ArrayBuffer.
  * 
- * @param buffer - The file data as an ArrayBuffer
+ * @param data - The file data as a BufferSource
  * @returns A promise that resolves to the hex string representation of the hash
  */
-export const computeSha256 = async (buffer: ArrayBuffer): Promise<string> => {
-  const hashBuffer = await crypto.subtle.digest('SHA-256', buffer);
+export const computeSha256 = async (data: BufferSource): Promise<string> => {
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
   const hashArray  = Array.from(new Uint8Array(hashBuffer));
   return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 };
