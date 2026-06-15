@@ -36,10 +36,12 @@ export function useWebRTC(params: {
   const onConnectRef = useRef(params.onConnect);
   const onCloseRef   = useRef(params.onClose);
   const onErrorRef   = useRef(params.onError);
-  onDataRef.current    = params.onData;
-  onConnectRef.current = params.onConnect;
-  onCloseRef.current   = params.onClose;
-  onErrorRef.current   = params.onError;
+  useEffect(() => {
+    onDataRef.current    = params.onData;
+    onConnectRef.current = params.onConnect;
+    onCloseRef.current   = params.onClose;
+    onErrorRef.current   = params.onError;
+  }, [params.onData, params.onConnect, params.onClose, params.onError]);
 
   const { isInitiator } = params;
   const status = useStore((s) => s.status);
@@ -138,8 +140,8 @@ export function useWebRTC(params: {
       onConnectRef.current();
     });
 
-    peer.on('data', (data: any) => {
-      onDataRef.current(data);
+    peer.on('data', (data: unknown) => {
+      onDataRef.current(data as string | ArrayBuffer);
     });
 
     let hasErrored = false;
@@ -183,7 +185,7 @@ export function useWebRTC(params: {
     if (!peer || peer.destroyed) return false;
 
     const BUFFER_HIGH_WATERMARK = 2_097_152; // 2 MB
-    const channel = (peer as any)._channel;
+    const channel = (peer as unknown as { _channel?: RTCDataChannel })._channel;
     const buffered = channel?.bufferedAmount ?? 0;
 
     if (buffered > BUFFER_HIGH_WATERMARK) {

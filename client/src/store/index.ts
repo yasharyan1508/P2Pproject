@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { create } from 'zustand';
 import { createFileSlice } from './fileSlice';
 import type { FileSlice } from './fileSlice';

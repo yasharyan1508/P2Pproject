@@ -1,16 +1,13 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { Socket } from 'socket.io-client';
 import { getSocket } from '../lib/socketClient';
 import { useStore } from '../store';
 
 export function useSocket(): { socket: Socket | null; isConnected: boolean } {
   const [isConnected, setIsConnected] = useState(false);
-  const socketRef = useRef<Socket | null>(null);
 
   useEffect(() => {
     const socket = getSocket();
-    socketRef.current = socket;
-
     const handleConnect    = () => setIsConnected(true);
     const handleDisconnect = () => setIsConnected(false);
     const handleConnectError = () => {
@@ -34,5 +31,5 @@ export function useSocket(): { socket: Socket | null; isConnected: boolean } {
     };
   }, []);
 
-  return { socket: socketRef.current, isConnected };
+  return { socket: getSocket(), isConnected };
 }

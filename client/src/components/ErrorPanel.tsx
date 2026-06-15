@@ -1,9 +1,10 @@
 import React from 'react';
 import { Link2Off, Ban, WifiOff, AlertTriangle, UserX, CloudOff } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import type { ErrorType } from '../types';
 
 interface ErrorStyle {
-  icon: any;
+  icon: LucideIcon;
   colorHex: string;
   headline: string;
   body: string;

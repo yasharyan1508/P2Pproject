@@ -1,4 +1,4 @@
-/// <reference types="vitest" />
+
 import { renderHook, act } from '@testing-library/react';
 import { useTransferProgress } from './useTransferProgress';
 import { useStore } from '../store';

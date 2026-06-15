@@ -4,7 +4,7 @@ import { nanoid } from 'nanoid';
 import { toast } from 'sonner';
 import { getSocket } from '../lib/socketClient';
 import { useStore } from '../store';
-import type { RoomCreatedEvent, RoomErrorEvent, PeerJoinedEvent } from '../types';
+import type { RoomCreatedEvent } from '../types';
 
 /**
  * Hook for the Initiator (Sender) to generate a room ID, connect to the signaling server,
@@ -36,7 +36,7 @@ export function useRoomAsSender() {
       navigate(`/room/${confirmedId}`);
     };
 
-    const handleRoomError = (_event: RoomErrorEvent) => {
+    const handleRoomError = () => {
       // Collision: retry with a new nanoid
       const newRoomId   = nanoid(8);
       const newShareUrl = `${window.location.origin}/room/${newRoomId}`;
@@ -46,7 +46,7 @@ export function useRoomAsSender() {
       // This retry is transparent to the user
     };
 
-    const handlePeerJoined = (_event: PeerJoinedEvent) => {
+    const handlePeerJoined = () => {
       useStore.getState().setPeerConnected(true);
       useStore.getState().setStatus('connecting');
       // useWebRTC will handle SimplePeer initialization after this

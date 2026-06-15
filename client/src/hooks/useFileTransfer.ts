@@ -58,7 +58,7 @@ export function useFileTransfer() {
       for (let i = 0; i < chunks.length; i++) {
         if (abortRef.current) return;
 
-        const channel = (peer as any)._channel;
+        const channel = (peer as unknown as { _channel?: RTCDataChannel })._channel;
         if (channel && channel.bufferedAmount > BUFFER_HIGH) {
           await new Promise<void>((resolve) => {
             channel.bufferedAmountLowThreshold = BUFFER_LOW;
@@ -91,10 +91,11 @@ export function useFileTransfer() {
       peer.send('CTRL:' + JSON.stringify(eof));
 
       store.setStatus('verifying');
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("[useFileTransfer] Transfer failed:", err);
-      toast.error(`Transfer failed: ${err.message || 'Unknown error'}`);
-      store.setError('ice_failed', `Transfer stopped: ${err.message}`);
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+      toast.error(`Transfer failed: ${errorMessage}`);
+      store.setError('ice_failed', `Transfer stopped: ${errorMessage}`);
     }
   }, [progressHook]);
 

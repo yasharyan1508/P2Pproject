@@ -28,7 +28,7 @@ export function useFileReceiver(peer: SimplePeer.Instance | null) {
     chunkBufferRef.current = [];
 
     const store = useStore.getState();
-    store.setFile({ name: msg.fileName, size: msg.fileSize, type: msg.fileMimeType } as any);
+    store.setFile({ name: msg.fileName, size: msg.fileSize, type: msg.fileMimeType } as unknown as File);
     store.setTotalChunks(msg.totalChunks);
     store.setStatus('transferring');
     progressHook.startTracking();
@@ -103,7 +103,8 @@ export function useFileReceiver(peer: SimplePeer.Instance | null) {
       // If it's a string but doesn't start with CTRL:, it's unexpected, but we can treat as buffer
       buffer = new TextEncoder().encode(data);
     } else {
-      buffer = new Uint8Array((data as any).buffer, (data as any).byteOffset, (data as any).byteLength);
+      const arrayBufferView = data as unknown as ArrayBufferView;
+      buffer = new Uint8Array(arrayBufferView.buffer, arrayBufferView.byteOffset, arrayBufferView.byteLength);
     }
 
     // Check for 'CTRL:' prefix in binary buffer (C=67, T=84, R=82, L=76, :=58)

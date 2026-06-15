@@ -78,7 +78,7 @@ export const RoomPage: React.FC = () => {
   // Route incoming data channel messages to the correct handler
   useEffect(() => {
     if (!webrtc.peer) return;
-    const handleData = (data: any) => {
+    const handleData = (data: unknown) => {
       if (isInitiator) {
         // Sender handles AckMessage from receiver
         let text = '';
@@ -101,7 +101,7 @@ export const RoomPage: React.FC = () => {
                 useStore.getState().setError('hash_mismatch', 'Receiver reported corruption.');
               }
             }
-          } catch (_e) { /* ignore parse errors */ }
+          } catch { /* ignore parse errors */ }
         }
       } else {
         receiverTransfer.handleData(data);
