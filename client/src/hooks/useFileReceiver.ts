@@ -125,7 +125,7 @@ export function useFileReceiver(peer: SimplePeer.Instance | null) {
 
     // Otherwise, it's a raw file chunk
     const chunkBuffer = buffer.buffer.slice(buffer.byteOffset, buffer.byteOffset + buffer.byteLength);
-    handleChunk(chunkBuffer);
+    handleChunk(chunkBuffer as ArrayBuffer);
   }, [handleMetadata, handleEOF, handleChunk]);
 
   return { handleData };

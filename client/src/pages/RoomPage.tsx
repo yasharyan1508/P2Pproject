@@ -104,7 +104,7 @@ export const RoomPage: React.FC = () => {
           } catch { /* ignore parse errors */ }
         }
       } else {
-        receiverTransfer.handleData(data);
+        receiverTransfer.handleData(data as string | ArrayBuffer | Uint8Array);
       }
     };
     webrtc.peer.on('data', handleData);
