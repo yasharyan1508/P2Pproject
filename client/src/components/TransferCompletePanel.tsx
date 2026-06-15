@@ -19,15 +19,15 @@ export const TransferCompletePanel: React.FC<{ onSendAnother: () => void }> = ({
         <CheckCircle2 className="w-[40px] h-[40px] text-[#10B981]" />
       </div>
       
-      <h2 className="font-h1 text-[24px] font-bold text-on-surface mb-[16px] text-center">
+      <h2 className="font-h1 text-[24px] font-bold text-white mb-[16px] text-center">
         File Sent Successfully
       </h2>
       
       <div className="flex flex-col items-center gap-[8px] mb-[28px]">
-        <span className="font-h1 text-[16px] font-semibold text-on-surface text-center">
+        <span className="font-h1 text-[16px] font-semibold text-white text-center">
           {displayName}
         </span>
-        <span className="font-body text-[13px] text-on-surface-variant text-center">
+        <span className="font-body text-[13px] text-[#9CA3AF] text-center">
           {displaySize} &middot; Transfer complete
         </span>
         <div className="flex items-center gap-[6px] mt-[6px]">
@@ -40,7 +40,7 @@ export const TransferCompletePanel: React.FC<{ onSendAnother: () => void }> = ({
       
       <button 
         onClick={onSendAnother}
-        className="w-full md:w-auto bg-primary hover:bg-[#4F7EFF] text-white rounded-[10px] px-[28px] py-[12px] font-h1 text-[15px] shadow-[0_0_20px_rgba(59,110,248,0)] hover:shadow-[0_0_20px_rgba(59,110,248,0.4)] transition-all transform active:translate-y-[1px]"
+        className="w-full md:w-auto bg-[#7C3AED] hover:bg-[#6D28D9] text-white rounded-[10px] px-[28px] py-[12px] font-h1 text-[15px] shadow-[0_0_20px_rgba(124,58,237,0)] hover:shadow-[0_0_20px_rgba(124,58,237,0.4)] transition-all transform active:translate-y-[1px]"
       >
         Send Another File
       </button>

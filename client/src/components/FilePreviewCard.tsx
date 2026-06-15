@@ -12,18 +12,18 @@ export const FilePreviewCard: React.FC<Props> = ({ file, onClear, isHashComputin
   return (
     <div className="flex items-center justify-between pb-[20px] mb-[20px] border-b ghost-border w-full">
       <div className="flex items-center gap-4 overflow-hidden flex-1">
-        <div className="w-[44px] h-[52px] flex-shrink-0 flex items-center justify-center text-on-surface-variant relative bg-background rounded-md border border-outline-variant/30">
+        <div className="w-[44px] h-[52px] flex-shrink-0 flex items-center justify-center text-[#9CA3AF] relative bg-[#0D0D13] rounded-md border border-white/10">
           <FileIcon className="w-6 h-6" />
         </div>
         <div className="min-w-0 flex-1">
-          <p className="font-h1 text-[15px] font-semibold text-on-surface truncate">{file.name}</p>
-          <p className="font-body text-[13px] text-on-surface-variant mt-[4px]">
+          <p className="font-h1 text-[15px] font-semibold text-white truncate">{file.name}</p>
+          <p className="font-body text-[13px] text-[#9CA3AF] mt-[4px]">
             {formatBytes(file.size)} &middot; {file.type || 'Unknown type'}
           </p>
           {isHashComputing && (
             <div className="flex items-center gap-[6px] mt-[6px]">
-              <Loader2 className="w-[14px] h-[14px] text-on-surface-variant animate-spin" />
-              <span className="font-body text-[12px] text-on-surface-variant">Computing integrity hash...</span>
+              <Loader2 className="w-[14px] h-[14px] text-[#9CA3AF] animate-spin" />
+              <span className="font-body text-[12px] text-[#9CA3AF]">Computing integrity hash...</span>
             </div>
           )}
         </div>
@@ -32,7 +32,7 @@ export const FilePreviewCard: React.FC<Props> = ({ file, onClear, isHashComputin
         {onClear && (
           <button 
             onClick={onClear}
-            className="font-h1 text-[13px] font-medium text-on-surface-variant hover:text-on-surface transition-colors border border-transparent hover:ghost-border px-3 py-1.5 rounded-lg"
+            className="font-h1 text-[13px] font-medium text-[#9CA3AF] hover:text-white transition-colors border border-transparent hover:border-white/10 px-3 py-1.5 rounded-lg"
           >
             &times; Change
           </button>

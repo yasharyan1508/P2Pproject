@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { nanoid } from 'nanoid';
+import { customAlphabet } from 'nanoid';
+const generateRoomId = customAlphabet('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ', 6);
 import { toast } from 'sonner';
 import { getSocket } from '../lib/socketClient';
 import { useStore } from '../store';
@@ -18,7 +19,7 @@ export function useRoomAsSender() {
     const store  = useStore.getState();
 
     // Step 1: Generate room ID
-    const roomId  = nanoid(8);
+    const roomId  = generateRoomId();
     const shareUrl = `${window.location.origin}/room/${roomId}`;
 
     // Step 2: Update store
@@ -38,7 +39,7 @@ export function useRoomAsSender() {
 
     const handleRoomError = () => {
       // Collision: retry with a new nanoid
-      const newRoomId   = nanoid(8);
+      const newRoomId   = generateRoomId();
       const newShareUrl = `${window.location.origin}/room/${newRoomId}`;
       store.setRoom(newRoomId, true);
       store.setShareUrl(newShareUrl);

@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
-import { useStore } from '../store';
+import { useNavigate } from 'react-router-dom';
 import { useRoomAsSender } from '../hooks/useRoom';
-import { FileDropZone } from '../components/FileDropZone';
-import { computeSha256 } from '../lib/hasher';
-import { readFileAsArrayBuffer } from '../lib/fileReader';
+
 
 const SenderRoomManager: React.FC = () => {
   useRoomAsSender();
@@ -11,84 +9,95 @@ const SenderRoomManager: React.FC = () => {
 };
 
 export const HomePage: React.FC = () => {
-  const file = useStore((state) => state.file);
-  const setFile = useStore((state) => state.setFile);
-  const [validationError, setValidationError] = useState<string | null>(null);
+  const [isCreatingRoom, setIsCreatingRoom] = useState(false);
+  const [roomIdToJoin, setRoomIdToJoin] = useState('');
+  const navigate = useNavigate();
 
-  const handleFileSelect = async (selectedFile: File) => {
-    if (selectedFile.size === 0) {
-      setValidationError('This file is empty.');
-      return;
-    }
-    const maxMbStr = import.meta.env.VITE_MAX_FILE_SIZE_MB;
-    const maxMb = maxMbStr ? parseInt(maxMbStr, 10) : 50;
-    if (selectedFile.size > maxMb * 1024 * 1024) {
-      setValidationError(`File exceeds ${maxMb} MB limit.`);
-      return;
-    }
-
-    setValidationError(null);
-    setFile(selectedFile);
-
-    try {
-      const buffer = await readFileAsArrayBuffer(selectedFile);
-      const hash = await computeSha256(buffer);
-      useStore.getState().setHash(hash);
-    } catch (err) {
-      console.error('Failed to compute hash:', err);
+  const handleJoin = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (roomIdToJoin.trim()) {
+      navigate(`/room/${roomIdToJoin.trim()}`);
     }
   };
 
   return (
-    <div className="w-full text-center flex flex-col items-center max-w-container_max_width px-margin_mobile md:px-0 py-12 pb-margin_desktop">
-      {file && <SenderRoomManager />}
-      
-      {/* Hero Section */}
-      <div className="w-full text-center mb-stack_lg">
-        <h1 className="font-display-mobile md:font-display text-[30px] md:text-[36px] font-semibold tracking-[-0.02em] text-on-background mb-stack_sm">
-          Transfer files. Direct.
-        </h1>
-        <div className="w-full h-[1px] ghost-border my-stack_md max-w-[48px] mx-auto"></div>
-        <p className="font-body text-[16px] text-on-surface-variant max-w-[400px] mx-auto">
-          No server. No storage. Browser to browser.
-        </p>
-      </div>
+  <div className="w-full min-h-[calc(100vh-72px)] flex flex-col items-center justify-center px-5 md:px-0 pb-10">
+    {isCreatingRoom && <SenderRoomManager />}
 
-      {/* File Drop Zone Card */}
-      <div className="w-full glass-card halo-glow rounded-xl p-stack_lg md:p-[40px] transition-all duration-500 relative">
-        {file ? (
-          <div className="w-full h-[180px] flex items-center justify-center">
-            <div className="flex flex-col items-center gap-4">
-              <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
-              <p className="text-on-surface font-body">Initializing secure room...</p>
-            </div>
-          </div>
-        ) : (
-          <FileDropZone onFileSelect={handleFileSelect} error={validationError} />
-        )}
-      </div>
+    {/* Hero */}
+    <div className="w-full text-center mb-10">
+      <h1 className="font-display text-[48px] md:text-[64px] font-bold tracking-tight text-white mb-3 leading-tight">
+        Transfer files. Direct.
+      </h1>
+      <p className="text-[18px] text-[#9CA3AF]">
+        No server. No storage. Browser to browser.
+      </p>
+    </div>
 
-      {/* Trust Indicators */}
-      <div className="w-full mt-[48px] flex flex-col md:flex-row justify-center md:justify-between items-center gap-stack_lg">
-        <div className="flex items-center gap-stack_sm">
-          <svg className="w-4 h-4 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-          </svg>
-          <span className="font-mono-label text-[11px] text-on-surface-variant uppercase tracking-[0.08em]">DTLS ENCRYPTED</span>
+    {/* Actions */}
+    <div className="w-full max-w-[440px] flex flex-col items-center gap-5">
+      {isCreatingRoom ? (
+        <div className="w-full h-[56px] flex items-center justify-center gap-3">
+          <div className="w-5 h-5 border-2 border-[#7C3AED] border-t-transparent rounded-full animate-spin" />
+          <p className="text-white text-[15px]">Initializing secure room...</p>
         </div>
-        <div className="flex items-center gap-stack_sm">
-          <svg className="w-4 h-4 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
-          </svg>
-          <span className="font-mono-label text-[11px] text-on-surface-variant uppercase tracking-[0.08em]">NO UPLOAD SPEED LIMIT</span>
-        </div>
-        <div className="flex items-center gap-stack_sm">
-          <svg className="w-4 h-4 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
-          </svg>
-          <span className="font-mono-label text-[11px] text-on-surface-variant uppercase tracking-[0.08em]">NO SERVER LOGS</span>
-        </div>
+      ) : (
+        <>
+          {/* Create Room — white pill */}
+          <button
+            onClick={() => setIsCreatingRoom(true)}
+            className="w-full bg-white text-black font-bold text-[17px] rounded-full py-[14px] hover:bg-gray-100 transition-colors"
+          >
+            Create Room
+          </button>
+
+          <span className="text-[13px] text-[#6B7280] font-medium tracking-widest">OR</span>
+
+          {/* Join Room — dark pill input + button */}
+          <form onSubmit={handleJoin} className="relative w-full">
+            <input
+              type="text"
+              placeholder="ENTER ROOM ID"
+              value={roomIdToJoin}
+              onChange={(e) => setRoomIdToJoin(e.target.value.toUpperCase())}
+              className="w-full bg-[#111118] border border-white/10 rounded-full pl-6 pr-[100px] py-[14px] text-[15px] text-white outline-none focus:border-[#7C3AED]/60 transition-colors placeholder:text-[#6B7280] uppercase tracking-widest font-['JetBrains_Mono']"
+            />
+            <button
+              type="submit"
+              disabled={!roomIdToJoin.trim()}
+              className="absolute right-2 top-1/2 -translate-y-1/2 bg-[#1F1F2E] text-white hover:bg-[#2A2A3E] disabled:opacity-40 disabled:cursor-not-allowed rounded-full px-6 py-2 font-semibold text-[14px] transition-colors"
+            >
+              Join
+            </button>
+          </form>
+        </>
+      )}
+    </div>
+
+    {/* Trust indicators */}
+    <div className="w-full mt-16 flex flex-col md:flex-row justify-center items-center gap-10">
+      {/* DTLS Encrypted */}
+      <div className="flex flex-col items-center gap-2">
+        <svg className="w-7 h-7 text-white/70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+        </svg>
+        <span className="text-[13px] text-[#9CA3AF]">DTLS Encrypted</span>
+      </div>
+      {/* No Upload Speed Limit */}
+      <div className="flex flex-col items-center gap-2">
+        <svg className="w-7 h-7 text-white/70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
+        </svg>
+        <span className="text-[13px] text-[#9CA3AF]">No Upload Speed Limit</span>
+      </div>
+      {/* No Server Logs */}
+      <div className="flex flex-col items-center gap-2">
+        <svg className="w-7 h-7 text-white/70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" />
+        </svg>
+        <span className="text-[13px] text-[#9CA3AF]">No Server Logs</span>
       </div>
     </div>
-  );
+  </div>
+);
 };

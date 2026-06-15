@@ -7,7 +7,7 @@ import { useFileTransfer } from '../hooks/useFileTransfer';
 import { useFileReceiver } from '../hooks/useFileReceiver';
 import { getSocket, destroySocket } from '../lib/socketClient';
 
-import { ShareLinkPanel } from '../components/ShareLinkPanel';
+import { SenderControlPanel } from '../components/SenderControlPanel';
 import { TransferProgressBar } from '../components/TransferProgressBar';
 import { ErrorPanel } from '../components/ErrorPanel';
 import { TransferCompletePanel } from '../components/TransferCompletePanel';
@@ -47,7 +47,6 @@ export const RoomPage: React.FC = () => {
   const isInitiator = useStore((s) => s.isInitiator);
   const status = useStore((s) => s.status);
   const errorType = useStore((s) => s.errorType);
-  const shareUrl = useStore((s) => s.shareUrl);
   const progressPercent = useStore((s) => s.progressPercent);
   const transferSpeedBps = useStore((s) => s.transferSpeedBps);
   const etaSeconds = useStore((s) => s.etaSeconds);
@@ -181,21 +180,35 @@ export const RoomPage: React.FC = () => {
     navigate('/');
   };
 
+
   const liveMessage = useMemo(() => STATUS_LIVE_MESSAGES[status] ?? '', [status]);
 
   const renderPanel = () => {
     switch (status) {
-      case 'waiting_peer':  
-        return isInitiator && shareUrl ? <ShareLinkPanel shareUrl={shareUrl} /> : null;
-      case 'connecting':    
-        return <ConnectingPanel />;
+      case 'waiting_peer':
+      case 'connecting':
+      case 'ready_to_send':
+        if (isInitiator && roomId) {
+          return <SenderControlPanel roomId={roomId} />;
+        }
+        if (!isInitiator) {
+          return status === 'connecting' ? <ConnectingPanel /> : (
+            <div className="flex flex-col items-center justify-center min-h-[50vh] text-center gap-8">
+              <p className="text-white font-semibold text-[20px]">
+                Waiting for sender to start transfer...
+              </p>
+              <div className="spinner-purple" />
+            </div>
+          );
+        }
+        return null;
       case 'transferring':  
         return <TransferProgressBar percent={progressPercent} speedBps={transferSpeedBps} etaSeconds={etaSeconds} />;
       case 'verifying':     
         return (
           <div className="flex flex-col items-center justify-center p-8">
-            <Loader2 className="w-8 h-8 text-green-500 animate-spin mb-4" />
-            <p className="text-slate-600">Verifying file integrity...</p>
+            <Loader2 className="w-8 h-8 text-[#7C3AED] animate-spin mb-4" />
+            <p className="text-[#9CA3AF]">Verifying file integrity...</p>
           </div>
         );
       case 'complete':      
@@ -216,8 +229,7 @@ export const RoomPage: React.FC = () => {
       <LiveRegion message={liveMessage} />
       {!isInitiator && roomId && <ReceiverRoomManager roomId={roomId} />}
       
-      <div className="w-full max-w-container_max_width glass-card halo-glow rounded-xl p-stack_lg md:p-[40px] flex flex-col items-center relative">
-        {/* Safari Warning Banner */}
+      <div className="w-full max-w-container_max_width flex flex-col items-center mt-8">
         {/iPad|iPhone|iPod/.test(navigator.userAgent) && /Safari/.test(navigator.userAgent) && !isInitiator && status === 'transferring' && (
           <div className="w-full bg-[#F59E0B]/10 border border-[#F59E0B]/25 rounded-[10px] px-4 py-3 mb-6 flex items-center gap-3">
             <svg className="w-4 h-4 text-[#F59E0B] flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -229,15 +241,8 @@ export const RoomPage: React.FC = () => {
           </div>
         )}
 
-        {(file || fileName) && status !== 'complete' && status !== 'failed' && status !== 'disconnected' && (
+        {(file || fileName) && status !== 'complete' && status !== 'failed' && status !== 'disconnected' && (!isInitiator || status === 'transferring' || status === 'verifying') && (
           <FilePreviewCard file={{ name: fileName || (file?.name ?? ''), size: fileSize || (file?.size ?? 0), type: file?.type || '' }} />
-        )}
-        
-        {status === 'waiting_peer' && isInitiator && !file && (
-          <div className="flex flex-col items-center justify-center p-8 gap-4 w-full">
-             <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
-             <p className="text-on-surface font-body">Initializing secure room...</p>
-          </div>
         )}
         
         <div className="w-full mt-4 flex justify-center">

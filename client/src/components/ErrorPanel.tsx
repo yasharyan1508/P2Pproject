@@ -51,20 +51,20 @@ export const ErrorPanel: React.FC<Props> = ({ errorType, onPrimary, onSecondary 
         <Icon className="w-[40px] h-[40px]" style={{ color: config.colorHex }} />
       </div>
       
-      <h3 className="font-h1 text-[24px] font-bold text-on-surface mb-[16px] text-center">{config.headline}</h3>
-      <p className="font-body text-[14px] text-on-surface-variant text-center mb-[28px] max-w-[320px] leading-[1.6]">{config.body}</p>
+      <h3 className="font-h1 text-[24px] font-bold text-white mb-[16px] text-center">{config.headline}</h3>
+      <p className="font-body text-[14px] text-[#9CA3AF] text-center mb-[28px] max-w-[320px] leading-[1.6]">{config.body}</p>
       
       <div className="flex flex-col gap-[12px] w-full md:w-auto items-center">
         <button 
           onClick={onPrimary} 
-          className="w-full md:w-auto bg-primary hover:bg-[#4F7EFF] text-white rounded-[10px] px-[28px] py-[12px] font-h1 text-[15px] shadow-[0_0_20px_rgba(59,110,248,0)] hover:shadow-[0_0_20px_rgba(59,110,248,0.4)] transition-all transform active:translate-y-[1px]"
+          className="w-full md:w-auto bg-[#7C3AED] hover:bg-[#6D28D9] text-white rounded-[10px] px-[28px] py-[12px] font-h1 text-[15px] shadow-[0_0_20px_rgba(124,58,237,0)] hover:shadow-[0_0_20px_rgba(124,58,237,0.4)] transition-all transform active:translate-y-[1px]"
         >
           {config.primaryLabel}
         </button>
         {config.secondaryLabel && onSecondary && (
           <button 
             onClick={onSecondary} 
-            className="w-full md:w-auto bg-transparent border border-outline-variant/30 hover:bg-[#3B6EF8]/10 hover:border-[#3B6EF8]/30 text-on-surface rounded-[10px] px-[28px] py-[12px] font-h1 text-[15px] transition-all transform active:translate-y-[1px]"
+            className="w-full md:w-auto bg-transparent border border-white/10 hover:bg-[#7C3AED]/10 hover:border-[#7C3AED]/30 text-white rounded-[10px] px-[28px] py-[12px] font-h1 text-[15px] transition-all transform active:translate-y-[1px]"
           >
             {config.secondaryLabel}
           </button>

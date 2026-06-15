@@ -136,7 +136,7 @@ export function useWebRTC(params: {
 
     peer.on('connect', () => {
       clearIceTimeout();
-      useStore.getState().setStatus('transferring');
+      useStore.getState().setStatus('ready_to_send');
       onConnectRef.current();
     });
 

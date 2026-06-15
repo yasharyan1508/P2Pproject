@@ -7,6 +7,13 @@ export default {
   theme: {
     extend: {
       colors: {
+        "brand-purple": "#7C3AED",
+        "brand-purple-dim": "rgba(124,58,237,0.15)",
+        "surface-card": "#161622",
+        "app-bg": "#0D0D13",
+        "input-bg": "#111118",
+        "muted": "#9CA3AF",
+        "caption": "#6B7280",
         "on-surface": "#dee2ed",
         "on-error": "#690005",
         "surface-container-high": "#252a32",

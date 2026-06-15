@@ -10,11 +10,11 @@ interface Props {
 
 export const TransferProgressBar: React.FC<Props> = ({ percent, speedBps, etaSeconds }) => (
   <div className="w-full flex flex-col items-center">
-    <span className="font-h1 text-[11px] font-medium text-primary tracking-[0.1em] uppercase mb-[8px]">
+    <span className="font-h1 text-[11px] font-medium text-[#7C3AED] tracking-[0.1em] uppercase mb-[8px]">
       Transferring
     </span>
     
-    <div className="font-display text-[36px] md:text-[48px] font-bold text-on-surface mb-[16px] leading-none">
+    <div className="font-display text-[36px] md:text-[48px] font-bold text-white mb-[16px] leading-none">
       {Math.round(percent)}%
     </div>
     
@@ -36,18 +36,18 @@ export const TransferProgressBar: React.FC<Props> = ({ percent, speedBps, etaSec
     
     <div className="w-full flex flex-col md:flex-row justify-center md:justify-between items-center gap-[8px] mb-[32px]">
       <div className="flex items-center gap-[6px] opacity-100 transition-opacity duration-200">
-        <Zap className="w-[14px] h-[14px] text-primary" />
-        <span className="font-h1 text-[14px] font-semibold text-on-surface">{formatSpeed(speedBps)}</span>
+        <Zap className="w-[14px] h-[14px] text-[#7C3AED]" />
+        <span className="font-h1 text-[14px] font-semibold text-white">{formatSpeed(speedBps)}</span>
       </div>
-      <span className="font-body text-[14px] text-on-surface-variant opacity-100 transition-opacity duration-200">
+      <span className="font-body text-[14px] text-[#9CA3AF] opacity-100 transition-opacity duration-200">
         {formatEta(etaSeconds)} remaining
       </span>
     </div>
     
     <div className="w-full h-[1px] ghost-border mb-[16px]"></div>
     <div className="flex items-center justify-center gap-[6px]">
-      <Lock className="w-[14px] h-[14px] text-on-surface-variant" />
-      <span className="font-body text-[12px] text-on-surface-variant">
+      <Lock className="w-[14px] h-[14px] text-[#9CA3AF]" />
+      <span className="font-body text-[12px] text-[#9CA3AF]">
         DTLS Encrypted &middot; No server relay
       </span>
     </div>

@@ -33,6 +33,7 @@ export type TransferStatus =
   | 'idle'
   | 'waiting_peer'
   | 'connecting'
+  | 'ready_to_send'
   | 'transferring'
   | 'verifying'
   | 'complete'
